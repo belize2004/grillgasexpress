@@ -1,14 +1,12 @@
 import React from "react";
-import Link from "next/link";
 import { groq } from "next-sanity";
 import {client} from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image"; // Sanity's image URL builder
-import { product } from "@/sanity/schemas/product-schema";
 import { GoArrowUpRight } from "react-icons/go";
 
 export default async function TestCard() {
     
-  const products = await client.fetch(groq `*[_type=="product"]`);
+  const products = await client.fetch(groq `*[_type=="product"]`) as any;
   return (
     <div className="pl-8">
     <div className="flex flex-row gap-6 overflow-x-auto pb-4">

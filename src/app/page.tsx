@@ -1,11 +1,7 @@
-import Image from "next/image";
-import { groq } from "next-sanity";
-import {client} from "@/sanity/lib/client";
 import Header from "./components/navbar";
 import Hero from "./components/hero";
 import Banner from "./components/banner";
 import ProductSection from "./components/products";
-import ProductCard from "./components/food_truck";
 import TestCard from "./components/test_card";
 import FoodTruck from "./components/food_truck";
 import TestimonialSection from "./components/testimonial_header";

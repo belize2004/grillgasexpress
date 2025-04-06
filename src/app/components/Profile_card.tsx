@@ -5,7 +5,7 @@ import { urlFor } from "@/sanity/lib/image";
 import { GoArrowUpRight } from "react-icons/go";
 
 export default async function ProfileCard() {
-  const profiles = await client.fetch(groq`*[_type=="profileCard"]`);
+  const profiles = await client.fetch(groq`*[_type=="profileCard"]`) as any;
   console.log(profiles);
 
   return (
