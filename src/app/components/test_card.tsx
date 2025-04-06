@@ -41,7 +41,7 @@ export default async function TestCard() {
           <button className="bg-[#027BFB] hover:bg-[#0066d6] text-white text-sm font-medium px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
             Order Now
             <div className="rounded-full  bg-gray-100 hover:bg-gray-300 transition-colors">
-                <GoArrowUpRight className="text-blue-500 w-4 h-4" />
+                <GoArrowUpRight className="text-blue-500 md:w-4 md:h-4" />
             </div>
           </button>
         </div>
