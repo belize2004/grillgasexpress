@@ -2,7 +2,7 @@
 
 export default function TestimonialSection() {
     return (
-        <section className='pl-8'>
+        <section className='pl-8 pt-8'>
         <div>
             <h3 className="text-1xl md:text-2xl lg:text-2xl mb-6 leading-tight">
             <span className="font-bold uppercase">Testimonials</span><br />

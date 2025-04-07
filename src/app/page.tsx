@@ -25,7 +25,9 @@ export default async function Home() {
       <TestimonialSection/>
       <TestimonialCard/>
       <AboutUs/>
+      <div className="p-2"></div>
       <TeamSection/>
+      <div className="p-2"></div>
       <ProfileCard/>
       <Footer/>
       </div>

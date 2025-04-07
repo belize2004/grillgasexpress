@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 
 import "./globals.css";
-
+import { CartProvider } from "./context/CartContext";
+// Import the context
 
 // Configure the Lato font
 const lato = Lato({
-  weight: ['300','400', '700'], // Specify weights you need
+  weight: ['300','400', '700'],
   subsets: ['latin'],
-  variable: '--font-lato', // CSS variable name
+  variable: '--font-lato',
 });
 
 export const metadata: Metadata = {
@@ -23,10 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${lato.variable}`}
-      >
-        {children}
+      <body className={`${lato.variable}`}>
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
