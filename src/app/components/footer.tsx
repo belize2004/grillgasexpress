@@ -2,7 +2,7 @@ import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 py-6 text-sm text-gray-600">
+    <footer className=" py-6 text-sm text-gray-600">
       <div className="max-w-6xl mx-auto px-4 flex flex-col items-center space-y-4">
         
         {/* Nav Links */}

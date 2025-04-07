@@ -3,7 +3,7 @@ import { groq } from "next-sanity";
 import {client} from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image"; // Sanity's image URL builder
 import { GoArrowUpRight } from "react-icons/go";
-
+import { Product } from "@/types/product";
 export default async function TestCard() {
     
   const products = await client.fetch(groq `*[_type=="product"]`) as any;
@@ -11,8 +11,8 @@ export default async function TestCard() {
     <div className="pl-8">
     <div className="flex flex-row gap-6 overflow-x-auto pb-4">
     {products.map(
-        (product:any,index:number)=>(
-     <div key={product.id ||index} className="w-64 rounded-2xl bg-[#F1F1F1] pt-2 shadow-md">
+        (product:Product,index:number)=>(
+     <div key={product._id ||index} className="w-64 rounded-2xl bg-[#F1F1F1] pt-2 shadow-md">
       {/* Product Title */}
             <h2 className="text-base font-normal pl-2 text-gray-800 mb-3">
                 {product.name}

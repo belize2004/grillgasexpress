@@ -3,6 +3,7 @@ import { groq } from "next-sanity";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { GoArrowUpRight } from "react-icons/go";
+import { Profile } from "@/types/profile"; 
 
 export default async function ProfileCard() {
   const profiles = await client.fetch(groq`*[_type=="profileCard"]`) as any;
@@ -10,7 +11,7 @@ export default async function ProfileCard() {
 
   return (
     <div className="flex flex-wrap gap-4 pl-8 pb-6">
-      {profiles.map((item: any, index: number) => (
+      {profiles.map((item: Profile, index: number) => (
         <div
           key={item._id || index}
           className="max-w-[200px] bg-white rounded-2xl  overflow-hidden relative"

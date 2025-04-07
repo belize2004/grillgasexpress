@@ -15,6 +15,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-white text-gray-900">
       {/* Navbar */}
+      <div className="bg-[#f1f1f1]">
       <Header />
       <Hero />
       <Banner/>
@@ -27,6 +28,7 @@ export default async function Home() {
       <TeamSection/>
       <ProfileCard/>
       <Footer/>
+      </div>
     </main>
   );
 }

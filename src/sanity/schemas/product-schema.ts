@@ -32,7 +32,7 @@ export const product = defineType ({
         name: 'slug',
         type: 'slug',
         title: 'Slug',
-        options:{source:'name '}
+        options:{source:'name'}
       }
     ]
   });

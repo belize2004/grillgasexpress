@@ -2,6 +2,7 @@ import React from "react";
 import { groq } from "next-sanity";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
+import { Testimonial } from "@/types/testimonial";
 
 export default async function TestimonialCard() {
   const testimonials = await client.fetch(groq`*[_type=="testimonial"]`) as any;
@@ -27,7 +28,7 @@ export default async function TestimonialCard() {
   return (
     <section className="px-4 py-8 md:px-8">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {testimonials.map((testimonial: any, index: number) => (
+        {testimonials.map((testimonial: Testimonial, index: number) => (
           <div
             key={testimonial._id || index}
             className="flex flex-col sm:flex-row bg-white rounded-xl border border-gray-200 shadow-sm p-4 min-h-[250px]"
