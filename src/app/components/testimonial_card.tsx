@@ -27,38 +27,42 @@ export default async function TestimonialCard() {
 
   return (
     <section className="px-4 py-8 md:px-8">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {testimonials.map((testimonial: Testimonial, index: number) => (
-          <div
-            key={testimonial._id || index}
-            className="flex flex-col sm:flex-row bg-white rounded-xl border border-gray-200 shadow-sm p-4 min-h-[250px]"
-          >
-            {/* Image */}
-            {testimonial.image && (
-              <div className="sm:w-1/3 h-full flex justify-center  items-center">
-                <img
-                  src={urlFor(testimonial.image).url()}
-                  alt={testimonial.clientName || "Testimonial image"}
-                  className="h-full w-auto object-fit rounded-2xl"
-                />
-              </div>
-            )}
-
-            {/* Content */}
-            <div className="sm:w-2/3 sm:pl-4 flex flex-col justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {testimonial.clientName || "John Davis"}
-                </h3>
-                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-                  {testimonial.content}
-                </p>
-              </div>
-              {renderStars(testimonial.rating)}
-            </div>
+     <div className="overflow-x-auto pb-4 scrollbar-hide">
+  <div className="flex space-x-6 snap-x snap-mandatory px-4 touch-pan-x">
+    {testimonials.map((testimonial: Testimonial, index: number) => (
+      <div
+        key={testimonial._id || index}
+        className="flex flex-col sm:flex-row bg-white rounded-xl border border-gray-200 shadow-sm p-4 min-h-[250px] w-[52vw] flex-shrink-0 snap-center"
+      >
+        {/* Image */}
+        {testimonial.image && (
+          <div className="sm:w-1/3 h-full flex justify-center items-center">
+            <img
+              src={urlFor(testimonial.image).url()}
+              alt={testimonial.clientName || "Testimonial image"}
+              className="h-full w-auto object-fit rounded-2xl"
+            />
           </div>
-        ))}
+        )}
+
+        {/* Content */}
+        <div className="sm:w-2/3 sm:pl-4 flex flex-col justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              {testimonial.clientName || "John Davis"}
+            </h3>
+            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+              {testimonial.content}
+            </p>
+          </div>
+          {renderStars(testimonial.rating)}
+        </div>
       </div>
+    ))}
+  </div>
+</div>
+
+
     </section>
   );
 }

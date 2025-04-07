@@ -69,14 +69,19 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        scrollX: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
+          scroll: 'scrollX 30s linear infinite',
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
     container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
   darkMode: ["class"],
 };

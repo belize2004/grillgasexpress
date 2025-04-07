@@ -20,4 +20,8 @@
     color: var(--foreground);
     font-family: var(--font-lato);
   }
+  html {
+    scroll-behavior: smooth;
+  }
+  
 }

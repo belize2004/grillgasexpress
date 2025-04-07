@@ -9,10 +9,10 @@ export default async function TestCard() {
   const products = await client.fetch(groq `*[_type=="product"]`);
   return (
     <div className="pl-8">
-    <div className="flex flex-row gap-6 overflow-x-auto pb-4">
+    <div className="flex flex-row gap-6 overflow-x-auto pb-4 ">
     {products.map(
         (product:Product,index:number)=>(
-     <div key={product._id ||index} className="w-64 rounded-2xl bg-[#F1F1F1] pt-2 shadow-md">
+     <div key={product._id ||index} className="w-64 rounded-2xl bg-[#F1F1F1] pt-2 shadow-md ">
       {/* Product Title */}
             <h2 className="text-base font-normal pl-2 text-gray-800 mb-3">
                 {product.name}
@@ -50,5 +50,5 @@ export default async function TestCard() {
     )}
     </div>
     </div>
-  );
+    );
 }
