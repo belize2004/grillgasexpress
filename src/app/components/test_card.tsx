@@ -6,7 +6,7 @@ import { GoArrowUpRight } from "react-icons/go";
 import { Product } from "@/types/product";
 export default async function TestCard() {
     
-  const products = await client.fetch(groq `*[_type=="product"]`) as any;
+  const products = await client.fetch(groq `*[_type=="product"]`);
   return (
     <div className="pl-8">
     <div className="flex flex-row gap-6 overflow-x-auto pb-4">

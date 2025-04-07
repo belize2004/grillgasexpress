@@ -11,7 +11,7 @@ export default function Hero() {
       <div className="md:w-[50%]">
         <h1 className="text-3xl md:text-4xl lg:text-5xl mb-6 leading-tight">
         <span className="font-light --font-lato">Tired of Running Out of Gas?</span><br />
-        <span className="font-light">We've Got You</span><span className="font-bold --font-lato"> Covered!</span>
+        <span className="font-light">We&apos;ve Got You</span><span className="font-bold --font-lato"> Covered!</span>
         </h1>
         <p className="text-lg md:text-xl mb-8 font-medium">
           Fast & Reliable Propane Supply – Because Every Drop<br />Counts!

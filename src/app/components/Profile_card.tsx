@@ -6,7 +6,7 @@ import { GoArrowUpRight } from "react-icons/go";
 import { Profile } from "@/types/profile"; 
 
 export default async function ProfileCard() {
-  const profiles = await client.fetch(groq`*[_type=="profileCard"]`) as any;
+  const profiles = await client.fetch(groq`*[_type=="profileCard"]`);
   console.log(profiles);
 
   return (

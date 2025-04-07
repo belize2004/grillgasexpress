@@ -5,7 +5,7 @@ import { urlFor } from "@/sanity/lib/image";
 import { Testimonial } from "@/types/testimonial";
 
 export default async function TestimonialCard() {
-  const testimonials = await client.fetch(groq`*[_type=="testimonial"]`) as any;
+  const testimonials = await client.fetch(groq`*[_type=="testimonial"]`);
     console.log(testimonials);
   const renderStars = (ratingString: string) => {
     const numericRating = parseInt(ratingString.split('/')[0]);
