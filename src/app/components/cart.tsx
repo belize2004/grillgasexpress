@@ -8,7 +8,7 @@ import { urlFor } from '@/sanity/lib/image';
 import { toast } from 'react-hot-toast';
 
 const Cart = () => {
-  const { cartItems, updateQuantity, removeFromCart, setCartItems } = useCart();
+  const { cartItems, updateQuantity, removeFromCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleQtyChange = (id: string, diff: number) => {
@@ -45,7 +45,7 @@ const Cart = () => {
         throw new Error('Checkout failed');
       }
     } catch (err) {
-      toast.error('Something went wrong while redirecting to payment.');
+      toast.error('Something went wrong while redirecting to payment.'+err);
     } finally {
       setIsProcessing(false);
     }
