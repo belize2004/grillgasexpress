@@ -1,7 +1,7 @@
 // context/CartContext.tsx
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { CartItem } from '@/types/cart';
 
 type CartContextType = {
@@ -9,8 +9,7 @@ type CartContextType = {
   addToCart: (item: CartItem) => void;
   updateQuantity: (id: string, quantity: number) => void; 
   removeFromCart: (id: string) => void;
-  setCartItems: (items: CartItem[]) => void; // add this line
-  // You can add removeItem, updateQty, etc. later
+  setCartItems: (items: CartItem[]) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -18,10 +17,21 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
- 
+  // ✅ Load cart from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('cartItems');
+    if (stored) {
+      setCartItems(JSON.parse(stored));
+    }
+  }, []);
 
-    const addToCart = (newItem: CartItem) => {
-      console.log('Adding to cart:', newItem);
+  // ✅ Persist cart to localStorage on change
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  const addToCart = (newItem: CartItem) => {
+    console.log('Adding to cart:', newItem);
     setCartItems(prev => {
       const existing = prev.find(item => item._id === newItem._id);
       if (existing) {
@@ -35,7 +45,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
     });
   };
-  
+
   const updateQuantity = (id: string, quantity: number) => {
     setCartItems(prev =>
       prev.map(item =>
@@ -62,5 +72,3 @@ export const useCart = () => {
   if (!context) throw new Error('useCart must be used within a CartProvider');
   return context;
 };
-
-

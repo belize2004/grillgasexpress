@@ -2,24 +2,14 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { urlFor } from '@/sanity/lib/image';
 import { toast } from 'react-hot-toast';
 
 const Cart = () => {
   const { cartItems, updateQuantity, removeFromCart, setCartItems } = useCart();
-
-  useEffect(() => {
-    const storedCart = localStorage.getItem('cartItems');
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
-    }
-  }, [setCartItems]);
-
-  useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartItems]);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleQtyChange = (id: string, diff: number) => {
     const item = cartItems.find(i => i._id === id);
@@ -33,8 +23,32 @@ const Cart = () => {
     }
   };
 
-  const handleOrder = () => {
-    toast.success('Order placed successfully!');
+  const handleOrder = async () => {
+    setIsProcessing(true);
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cartItems.map(item => ({
+            name: item.title,
+            quantity: item.quantity,
+            price: item.price
+          }))
+        })
+      });
+
+      const data = await response.json();
+      if (data?.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        throw new Error('Checkout failed');
+      }
+    } catch (err) {
+      toast.error('Something went wrong while redirecting to payment.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -83,10 +97,11 @@ const Cart = () => {
         <p>Sales Tax: <span className="font-medium">${salesTax}</span></p>
         <p className="text-lg font-bold">Total: ${total}</p>
         <button
-          className="mt-4 px-6 py-2 bg-black text-white rounded hover:bg-gray-800"
+          className="mt-4 px-6 py-2 bg-black text-white rounded hover:bg-gray-800 disabled:opacity-50"
           onClick={handleOrder}
+          disabled={isProcessing}
         >
-          Order Now
+          {isProcessing ? 'Processing...' : 'Order Now'}
         </button>
       </div>
     </section>
