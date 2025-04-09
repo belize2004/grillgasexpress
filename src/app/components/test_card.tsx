@@ -13,15 +13,14 @@ export default function TestCard() {
   const [products, setProducts] = useState<Product[]>([]);
   const { addToCart } = useCart();
 
-  useEffect(() => {
-    client.fetch('*[_type=="product"]').then(data => {
-      console.log("✅ Products fetched:", data);
-      setProducts(data);
-    }).catch(err => {
-      console.error("❌ Error fetching products:", err);
-    });
-  }, []);
-  
+  // useEffect(() => {
+  //   client.fetch(groq`*[_type=="product"]`).then(setProducts);
+  // }, []);
+
+  console.log("Fetching products...");
+  client.fetch(groq`*[_type == "product"]`).then(setProducts).catch(console.error);
+
+
   return (
     <div className="lg:pl-8">
       <div
