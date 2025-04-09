@@ -68,9 +68,9 @@ export default function Header() {
       {/* Mobile Nav Dropdown */}
       {isOpen && (
         <nav className="md:hidden px-4 pb-4 flex flex-col gap-3 text-gray-700 font-medium">
-          <Link href="#home" className="hover:text-orange-500 transition">Home</Link>
-          <Link href="#products" className="hover:text-orange-500 transition">Products</Link>
-          <Link href="#cart" className="hover:text-orange-500 transition">Cart</Link>
+          <Link href="#home" className="hover:text-blue-500 transition">Home</Link>
+          <Link href="#product" className="hover:text-blue-500 transition">Products</Link>
+          <Link href="/cart" className="hover:text-blue-500 transition">Cart</Link>
         </nav>
       )}
     </header>

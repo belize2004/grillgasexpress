@@ -65,11 +65,17 @@ export default function TestCard() {
                   className="bg-[#027BFB] hover:bg-[#0066d6] lg:ml-2 ml-2 text-white text-sm font-medium px-3 py-1 rounded-full flex items-center gap-1 shadow-md"
                   onClick={() =>
                     addToCart({
-                      _id: product._id,
-                      title: product.name,
-                      image: product.image,
-                      price: product.price,
-                      quantity: 1,
+                      // _id: product._id,
+                      // title: product.name,
+                      // image: product.image,
+                      // price: product.price,
+                      // quantity: 1,
+                      _id:"",
+                      title: "product.name",
+                      image: "product.image",
+                      price: 100,
+                      quantity:2
+
                     })
                   }
                 >
