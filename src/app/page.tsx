@@ -10,6 +10,7 @@ import AboutUs from "./components/about_us";
 import TeamSection from "./components/team_header";
 import ProfileCard from "./components/Profile_card";
 import Footer from "./components/footer";
+import ProductList from "./components/ProductList";
 
 export default async function Home() {
   return (
@@ -20,7 +21,7 @@ export default async function Home() {
       <Hero />
       <Banner/>
       <ProductSection/>
-      <TestCard/>
+      <ProductList/>
       <FoodTruck/>
       <TestimonialSection/>
       <TestimonialCard/>
