@@ -20,15 +20,15 @@ export default async function Home() {
       <Hero />
       <Banner/>
       <ProductSection/>
-      <TestCard/>
+      {/* <TestCard/> */}
       <FoodTruck/>
       <TestimonialSection/>
-      <TestimonialCard/>
+      {/* <TestimonialCard/> */}
       <AboutUs/>
       <div className="p-2"></div>
       <TeamSection/>
       <div className="p-2"></div>
-      <ProfileCard/>
+      {/* <ProfileCard/> */}
       <Footer/>
       </div>
     </main>
