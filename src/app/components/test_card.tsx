@@ -14,9 +14,14 @@ export default function TestCard() {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    client.fetch(groq`*[_type=="product"]`).then(setProducts);
+    client.fetch('*[_type=="product"]').then(data => {
+      console.log("✅ Products fetched:", data);
+      setProducts(data);
+    }).catch(err => {
+      console.error("❌ Error fetching products:", err);
+    });
   }, []);
-
+  
   return (
     <div className="lg:pl-8">
       <div
