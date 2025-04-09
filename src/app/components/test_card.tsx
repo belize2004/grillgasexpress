@@ -9,18 +9,16 @@ import { Product } from "@/types/product";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-hot-toast"; // ✅ Add toast import
 
-export default function TestCard() {
-  const [products, setProducts] = useState<Product[]>([]);
+export default async function TestCard() {
+  // var products;
+  // const [products, setProducts] = useState<Product[]>([]);
   const { addToCart } = useCart();
-
+  //  products = await client.fetch(groq`*[_type=="testimonial"]`);
   // useEffect(() => {
   //   client.fetch(groq`*[_type=="product"]`).then(setProducts);
   // }, []);
 
-  console.log("Fetching products...");
-  client.fetch(groq`*[_type == "product"]`).then(setProducts).catch(console.error);
-
-
+  const products: Product[] = await client.fetch(groq`*[_type=="product"]`);
   return (
     <div className="lg:pl-8">
       <div
