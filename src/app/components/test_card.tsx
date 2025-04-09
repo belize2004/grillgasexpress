@@ -1,17 +1,17 @@
 'use client';
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { groq } from "next-sanity";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { GoArrowUpRight } from "react-icons/go";
 import { Product } from "@/types/product";
-import { useEffect, useState } from "react";
-import { useCart } from "../context/CartContext"; // ✅ Import useCart
+import { useCart } from "../context/CartContext";
+import { toast } from "react-hot-toast"; // ✅ Add toast import
 
 export default function TestCard() {
   const [products, setProducts] = useState<Product[]>([]);
-  const { addToCart } = useCart(); // ✅ Access cart context
+  const { addToCart } = useCart();
 
   useEffect(() => {
     client.fetch(groq`*[_type=="product"]`).then(setProducts);
@@ -63,21 +63,16 @@ export default function TestCard() {
                 {/* CTA */}
                 <button
                   className="bg-[#027BFB] hover:bg-[#0066d6] lg:ml-2 ml-2 text-white text-sm font-medium px-3 py-1 rounded-full flex items-center gap-1 shadow-md"
-                  onClick={() =>
+                  onClick={() => {
                     addToCart({
-                      // _id: product._id,
-                      // title: product.name,
-                      // image: product.image,
-                      // price: product.price,
-                      // quantity: 1,
-                      _id:"",
-                      title: "product.name",
-                      image: "product.image",
-                      price: 100,
-                      quantity:2
-
-                    })
-                  }
+                      _id: product._id,
+                      title: product.name,
+                      image: product.image,
+                      price: product.price,
+                      quantity: 1,
+                    });
+                    toast.success(`${product.name} added to cart!`); // ✅ Toast message
+                  }}
                 >
                   Order Now
                   <div className="rounded-full bg-white hover:bg-gray-200 p-1 transition-colors">

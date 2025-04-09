@@ -8,7 +8,7 @@ export default function FoodTruck() {
         <span className="font-bold ">What Sets Us Apart?</span><br />
         <span className="font-bold"> Gas Delivered Straight to Your Food Truck!</span>
         </h3>
-        <div className="relative aspect-[16/9] md:aspect-[3/1] overflow-hidden rounded-2xl">
+        <div className="relative  aspect-[16/9] md:aspect-[3/1] overflow-hidden rounded-2xl">
   {/* <div className="overflow-hidden"> */}
     <Image
       src="/truck.png"
