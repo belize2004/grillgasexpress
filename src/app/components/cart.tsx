@@ -24,6 +24,11 @@ const Cart = () => {
   };
 
   const handleOrder = async () => {
+    if (cartItems.length === 0) {
+      toast.error('Your cart is empty!');
+      return;
+    }
+  
     setIsProcessing(true);
     try {
       const response = await fetch('/api/checkout', {
@@ -33,23 +38,30 @@ const Cart = () => {
           items: cartItems.map(item => ({
             name: item.title,
             quantity: item.quantity,
-            price: item.price
-          }))
-        })
+            price: item.price,
+          })),
+        }),
       });
-
+  
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(errText);
+      }
+  
       const data = await response.json();
       if (data?.checkoutUrl) {
+        toast.success('Redirecting to payment...');
         window.location.href = data.checkoutUrl;
       } else {
-        throw new Error('Checkout failed');
+        throw new Error('Checkout URL not found');
       }
-    } catch (err) {
-      toast.error('Something went wrong while redirecting to payment.'+err);
+    } catch (err: any) {
+      toast.error(`Checkout failed: ${err.message}`);
     } finally {
       setIsProcessing(false);
     }
   };
+  
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const salesTax = +(subtotal * 0.1).toFixed(2);
