@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { groq } from "next-sanity";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
