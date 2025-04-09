@@ -55,8 +55,8 @@ const Cart = () => {
       } else {
         throw new Error('Checkout URL not found');
       }
-    } catch (err: any) {
-      toast.error(`Checkout failed: ${err.message}`);
+    } catch (err) {
+      toast.error(`Checkout failed:`+err);
     } finally {
       setIsProcessing(false);
     }

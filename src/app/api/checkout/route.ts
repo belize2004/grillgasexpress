@@ -1,4 +1,5 @@
 // src/app/api/checkout/route.ts
+import { CartItem } from '@/types/cart';
 import { NextRequest, NextResponse } from 'next/server';
 import { Client, Environment } from 'square/legacy';
 
@@ -26,8 +27,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const lineItems = items.map((item: any) => ({
-      name: item.name,
+    const lineItems = (items as CartItem[]).map((item) => ({
+      name: item.title,
       quantity: item.quantity.toString(),
       basePriceMoney: {
         amount: BigInt(Math.round(item.price * 100)),
@@ -50,7 +51,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       checkoutUrl: response.result.checkout?.checkoutPageUrl,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Square checkout error:', error);
     return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
   }
