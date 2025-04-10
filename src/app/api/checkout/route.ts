@@ -1,5 +1,5 @@
 // src/app/api/checkout/route.ts
-import { CartItem } from '@/types/cart';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { Client, Environment } from 'square/legacy';
 
@@ -27,20 +27,23 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const lineItems = (items as CartItem[]).map((item) => ({
-      name: item.title,
-      quantity: item.quantity.toString(),
-      basePriceMoney: {
-        amount: BigInt(Math.round(item.price * 100)),
-        currency: 'USD',
-      },
-    }));
+    const lineItems = items.map((item) => ({
+        name: item.name,
+        quantity: item.quantity.toString(),
+        basePriceMoney: {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          amount: BigInt(Math.round(item.price * 100)),
+          currency: 'USD',
+        },
+      }));
+      
+    
 
-    const response = await checkoutApi.createCheckout(location.id, {
+    const response = await checkoutApi.createCheckout(process.env.SQUARE_LOCATION_ID!, {
       idempotencyKey: new Date().toISOString(),
       order: {
         order: {
-          locationId: location.id,
+          locationId: process.env.SQUARE_LOCATION_ID!,
           lineItems,
         },
       },
