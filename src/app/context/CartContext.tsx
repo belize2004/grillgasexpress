@@ -3,20 +3,23 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { CartItem } from '@/types/cart';
+import toast from 'react-hot-toast';
 
 type CartContextType = {
   cartItems: CartItem[];
-  addToCart: (item: CartItem) => void;
+  addToCart: (item: CartItem) => boolean;
   updateQuantity: (id: string, quantity: number) => void; 
   removeFromCart: (id: string) => void;
   clearCart:() => void;
   setCartItems: (items: CartItem[]) => void;
+  totalItems: number;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
 
   // ✅ Load cart from localStorage on mount
   useEffect(() => {
@@ -26,25 +29,29 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  // ✅ Persist cart to localStorage on change
+  // ✅ Persist cart to localStorage on change and update total items
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    
+    // Calculate total items
+    const total = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    setTotalItems(total);
   }, [cartItems]);
 
   const addToCart = (newItem: CartItem) => {
     console.log('Adding to cart:', newItem);
-    setCartItems(prev => {
-      const existing = prev.find(item => item._id === newItem._id);
-      if (existing) {
-        return prev.map(item =>
-          item._id === newItem._id
-            ? { ...item, quantity: item.quantity + newItem.quantity }
-            : item
-        );
-      } else {
-        return [...prev, newItem];
-      }
-    });
+    
+    const existing = cartItems.find(item => item._id === newItem._id);
+    
+    if (existing) {
+      // Item already exists in cart, show error toast
+      toast.error("This item is already in your cart!");
+      return false;
+    } else {
+      // Add new item to cart
+      setCartItems(prev => [...prev, newItem]);
+      return true;
+    }
   };
 
   const updateQuantity = (id: string, quantity: number) => {
@@ -57,20 +64,25 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-
-
   const removeFromCart = (id: string) => {
     setCartItems(prev => prev.filter(item => item._id !== id));
   };
 
   const clearCart = () => {
     setCartItems([]);
-    localStorage.removeItem('cart'); // if you’re using persistence
+    localStorage.removeItem('cartItems');
   };
   
-
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, updateQuantity, removeFromCart, setCartItems, clearCart }}>
+    <CartContext.Provider value={{ 
+      cartItems, 
+      addToCart, 
+      updateQuantity, 
+      removeFromCart, 
+      setCartItems, 
+      clearCart,
+      totalItems 
+    }}>
       {children}
     </CartContext.Provider>
   );
@@ -81,3 +93,4 @@ export const useCart = () => {
   if (!context) throw new Error('useCart must be used within a CartProvider');
   return context;
 };
+

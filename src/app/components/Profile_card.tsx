@@ -1,3 +1,4 @@
+///////   Profile_card.tsx.
 import React from "react";
 import { groq } from "next-sanity";
 import { client } from "@/sanity/lib/client";
@@ -12,16 +13,14 @@ export default async function ProfileCard() {
     <div className="px-4 pb-6">
       <div
         className="
-          grid grid-cols-1 
-          sm:grid-cols-2 
-          lg:flex lg:gap-4 lg:overflow-x-auto lg:scrollbar-hide
+          flex flex-wrap gap-4 justify-center items-center mx-auto
         "
       >
         {profiles.map((item: Profile, index: number) => (
           <div
             key={item._id || index}
             className="
-              w-full lg:w-[250px]
+              w-full lg:w-[290px]
               bg-white rounded-2xl overflow-hidden 
               relative flex-shrink-0
             "
