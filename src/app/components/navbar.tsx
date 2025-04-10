@@ -13,11 +13,11 @@ export default function Header() {
   const { totalItems } = useCart();
 
   
+  
   // Check if window width is mobile on mount and window resize
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-      isMobile;
+      setIsMobile(window.innerWidth < 768);  
     };
     
     // Check on initial load
@@ -93,7 +93,7 @@ export default function Header() {
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
-            <div className={`w-6 h-0.5 bg-black absolute transition-all duration-300 ${isOpen ? 'rotate-45' : '-translate-y-1.5'}`}></div>
+            <div className={`w-6 h-0.5 bg-black absolute ${isMobile?'transition-all':'transition-all'} duration-300 ${isOpen ? 'rotate-45' : '-translate-y-1.5'}`}></div>
             <div className={`w-6 h-0.5 bg-black absolute transition-all duration-300 ${isOpen ? 'opacity-0' : 'opacity-100'}`}></div>
             <div className={`w-6 h-0.5 bg-black absolute transition-all duration-300 ${isOpen ? '-rotate-45' : 'translate-y-1.5'}`}></div>
           </button>
