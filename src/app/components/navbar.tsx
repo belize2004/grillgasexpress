@@ -19,14 +19,14 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex gap-2 p-2 bg-white rounded-[50px] shadow-md">
-                        <div className="flex items-center px-4 py-2 rounded-full bg-gray-300 shadow-inner max-w-md">
+                        /* <div className="flex items-center px-4 py-2 rounded-full bg-gray-300 shadow-inner max-w-md">
                               <FaSearch className="text-white text-lg mr-3" />
                               <input
                                 type="text"
                                 placeholder="Search"
                                 className="bg-transparent outline-none text-white placeholder-white w-full"
                               />
-                            </div>
+                            </div> */
             <Link href="#home" className="hover:text-blue-500 transition px-6 py-2 rounded-[50px] font-lato hover:bg-white">
                         Home
                     </Link> 
