@@ -4,8 +4,6 @@ import { Lato } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "./context/CartContext";
 import { Toaster } from "react-hot-toast";
-import Header from "./components/navbar";
-import Footer from "./components/footer";
 // Import the context
 
 // Configure the Lato font

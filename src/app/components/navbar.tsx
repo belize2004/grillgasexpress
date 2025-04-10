@@ -9,13 +9,15 @@ import { FaShoppingCart } from 'react-icons/fa';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile,setIsMobile] = useState(false);
   const { totalItems } = useCart();
 
+  
   // Check if window width is mobile on mount and window resize
   useEffect(() => {
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
+      isMobile;
     };
     
     // Check on initial load
