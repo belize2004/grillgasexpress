@@ -1,0 +1,152 @@
+[
+  {
+    "fields": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "price",
+        "type": "number"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image"
+      },
+      {
+        "options": {
+          "source": "name"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      }
+    ],
+    "name": "product",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "name": "clientName",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "type": "string",
+        "title": "Testimonial Content"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "1/5",
+              "value": "1/5 ★"
+            },
+            {
+              "title": "2/5",
+              "value": "2/5 ★★"
+            },
+            {
+              "title": "3/5",
+              "value": "3/5 ★★★"
+            },
+            {
+              "title": "4/5",
+              "value": "4/5 ★★★★"
+            },
+            {
+              "title": "5/5",
+              "value": "5/5 ★★★★★"
+            }
+          ]
+        },
+        "description": "e.g. \"5/5\" or \"1/5\"",
+        "name": "rating",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "fields": [
+          {
+            "description": "Important for accessibility",
+            "name": "alt",
+            "type": "string",
+            "title": "Alternative Text"
+          }
+        ],
+        "name": "image",
+        "type": "image",
+        "title": "Client Photo/Logo"
+      }
+    ],
+    "name": "testimonial",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "title": "Full Name"
+      },
+      {
+        "name": "role",
+        "type": "string",
+        "title": "Role / Designation"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image",
+        "title": "Profile Image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Used for the top-right arrow icon link",
+        "name": "externalLink",
+        "type": "url",
+        "title": "External Link (optional)"
+      }
+    ],
+    "name": "profileCard",
+    "type": "document",
+    "title": "Profile"
+  }
+]
