@@ -1,4 +1,3 @@
-import { BiRuler } from "react-icons/bi";
 import { defineField, defineType } from "sanity";
 export const testimonial = defineType({
     name: 'testimonial',
