@@ -8,11 +8,13 @@ export const profile = defineType({
         name: 'name',
         title: 'Full Name',
         type: 'string',
+        validation: Rule => Rule.required().error("Name is mandatory")
       }),
       {
         name: 'role',
         title: 'Role / Designation',
         type: 'string',
+        validation: Rule => Rule.assetRequired().error('Designation is required')
       },
       {
         name: 'image',
@@ -21,6 +23,7 @@ export const profile = defineType({
         options: {
           hotspot: true, // Enables focal point cropping
         },
+        validation: Rule => Rule.assetRequired().error('Image is required')
       },
       {
         name: 'externalLink',

@@ -1,3 +1,4 @@
+import { BiRuler } from "react-icons/bi";
 import { defineField, defineType } from "sanity";
 export const testimonial = defineType({
     name: 'testimonial',
@@ -8,11 +9,15 @@ export const testimonial = defineType({
         name: 'clientName',
         title: 'Client Name',
         type: 'string',
-      }),
+        validation: Rule => Rule.required().error("Client name is mandatory")
+      }
+    
+    ),
       {
         name: 'content',
         title: 'Testimonial Content',
-        type: 'string'
+        type: 'string',
+        validation: Rule => Rule.assetRequired().error('Review content is required')
       },
       {
         name: 'rating',
@@ -27,7 +32,8 @@ export const testimonial = defineType({
             { title: '4/5', value: '4/5 ★★★★' },
             { title: '5/5', value: '5/5 ★★★★★' }
           ]
-        }
+        },
+        validation: Rule => Rule.assetRequired().error('Rating is required')
       },
       {
         name: 'image',
@@ -43,7 +49,8 @@ export const testimonial = defineType({
             type: 'string',
             description: 'Important for accessibility'
           }
-        ]
+        ],
+        validation: Rule => Rule.assetRequired().error('Client image is required')
       }
     ],
   });

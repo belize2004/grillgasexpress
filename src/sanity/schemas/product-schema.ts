@@ -8,7 +8,8 @@ export const product = defineType ({
      defineField({
         name: 'name',
         type: 'string',
-        title: 'Name'
+        title: 'Name',
+        validation: Rule => Rule.required().error("Name is mandatory")
       }),
     //   {
     //     name: 'description',
@@ -18,7 +19,8 @@ export const product = defineType ({
       {
         name: 'price',
         type: 'number',
-        title: 'Price'
+        title: 'Price',
+        validation: Rule => Rule.assetRequired().error('Price is required')
       },
       {
         name: 'image',
@@ -26,7 +28,8 @@ export const product = defineType ({
         title: 'Image',
         options: {
           hotspot: true
-        }
+        },
+        validation: Rule => Rule.assetRequired().error('Image is required')
       },
       {
         name: 'slug',
