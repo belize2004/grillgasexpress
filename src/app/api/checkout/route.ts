@@ -2,17 +2,19 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { Client, Environment } from 'square/legacy';
+import axios from 'axios';
+import FormData from 'form-data';
+import { generateOrderEmailHTML } from '@/emails/orderConfirmationTemplate'; // 👈 Adjust the path as needed
 
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN!,
-  environment: Environment.Sandbox,
+  environment: Environment.Sandbox
 });
 
 const checkoutApi = client.checkoutApi;
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-
   const { items } = body;
 
   if (!items || !Array.isArray(items)) {
@@ -28,16 +30,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const lineItems = items.map((item) => ({
-        name: item.name,
-        quantity: item.quantity.toString(),
-        basePriceMoney: {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          amount: BigInt(Math.round(item.price * 100)),
-          currency: 'USD',
-        },
-      }));
-      
-    
+      name: item.name,
+      quantity: item.quantity.toString(),
+      basePriceMoney: {
+        amount: BigInt(Math.round(item.price * 100)),
+        currency: 'USD',
+      },
+    }));
 
     const response = await checkoutApi.createCheckout(process.env.SQUARE_LOCATION_ID!, {
       idempotencyKey: new Date().toISOString(),
@@ -48,14 +47,40 @@ export async function POST(req: NextRequest) {
         },
       },
       redirectUrl: `${req.headers.get('origin')}/thank-you`,
-  
     });
 
-    return NextResponse.json({
-      checkoutUrl: response.result.checkout?.checkoutPageUrl,
-    });
+    const checkoutUrl = response.result.checkout?.checkoutPageUrl;
+
+    // 💌 Send email to business owner
+    await sendOrderEmailToOwner(items, checkoutUrl??'');
+
+    return NextResponse.json({ checkoutUrl });
   } catch (error) {
     console.error('Square checkout error:', error);
     return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
   }
+}
+
+// 👇 Utility function to send email via Mailgun
+async function sendOrderEmailToOwner(items: any[], checkoutUrl: string) {
+  const form = new FormData();
+
+  const emailHTML = generateOrderEmailHTML(items, checkoutUrl);
+
+  form.append('from', 'Order Bot <postmaster@sandbox84199c1eb7504f34b8891918eba801e7.mailgun.org>');
+  form.append('to', 'marmikmodi209@gmail.com'); // must be verified in sandbox
+  form.append('subject', '🛒 New Checkout Initiated');
+  form.append('html', emailHTML);
+
+  await axios.post(
+    `https://api.mailgun.net/v3/sandbox84199c1eb7504f34b8891918eba801e7.mailgun.org/messages`,
+    form,
+    {
+      auth: {
+        username: 'api',
+        password: process.env.MAILGUN_API_KEY!,
+      },
+      headers: form.getHeaders(),
+    }
+  );
 }
