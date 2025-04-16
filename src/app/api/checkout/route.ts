@@ -5,6 +5,7 @@ import { Client, Environment } from 'square/legacy';
 import axios from 'axios';
 import FormData from 'form-data';
 import { generateOrderEmailHTML } from '@/emails/orderConfirmationTemplate'; // 👈 Adjust the path as needed
+import { CartItem } from '@/types/cart';
 
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN!,
@@ -62,7 +63,7 @@ export async function POST(req: NextRequest) {
 }
 
 // 👇 Utility function to send email via Mailgun
-async function sendOrderEmailToOwner(items: any[], checkoutUrl: string) {
+async function sendOrderEmailToOwner(items: CartItem[] , checkoutUrl: string) {
   const form = new FormData();
 
   const emailHTML = generateOrderEmailHTML(items, checkoutUrl);
