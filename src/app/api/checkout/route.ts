@@ -9,7 +9,7 @@ import { CartItem } from '@/types/cart';
 
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN!,
-  environment: Environment.Sandbox
+  environment: Environment.Production
 });
 
 const checkoutApi = client.checkoutApi;
