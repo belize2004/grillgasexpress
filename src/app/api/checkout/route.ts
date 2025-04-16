@@ -1,7 +1,7 @@
 // src/app/api/checkout/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { Client, Environment } from 'square/legacy';
+import { ApiError, Client, Environment } from 'square/legacy';
 import axios from 'axios';
 import FormData from 'form-data';
 import { generateOrderEmailHTML } from '@/emails/orderConfirmationTemplate'; // 👈 Adjust the path as needed
@@ -58,6 +58,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ checkoutUrl });
   } catch (error) {
     console.error('Square checkout error:', error);
+    
+    if (error instanceof ApiError) {
+      const errorMessage = error.message;
+      const errorDetails = error.result?.errors ?? null;
+  
+      console.error('Square API message:', errorMessage);
+      console.error('Square API errors:', JSON.stringify(errorDetails, null, 2));
+    } else if (error instanceof Error) {
+      const errorMessage = error.message;
+      console.error('General error message:', errorMessage);
+    }
+
     return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
   }
 }
