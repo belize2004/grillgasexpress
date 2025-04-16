@@ -1,8 +1,11 @@
-export function generateOrderEmailHTML(items: any[], checkoutUrl: string): string {
+import { CartItem } from "@/types/cart";
+
+export function generateOrderEmailHTML(items: CartItem[], checkoutUrl: string): string {
+    
     const itemList = items
       .map(
         item =>
-          `<li><strong>${item.name}</strong> (x${item.quantity}) — $${item.price}</li>`
+          `<li><strong>${item.title}</strong> (x${item.quantity}) — $${item.price}</li>`
       )
       .join('');
   
