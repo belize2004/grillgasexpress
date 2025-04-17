@@ -6,14 +6,27 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { FaShoppingCart } from 'react-icons/fa';
+import ContactUsFormModal from './contact_form';
+import { CustomerInfo } from '@/types/customer';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile,setIsMobile] = useState(false);
   const { totalItems } = useCart();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  
+const handelClickOpenContactFormModal = () => { 
+    setIsModalOpen(!true);
+  }
+const handelClickCloseContactFormModal = () => {    
+    setIsModalOpen(false);
+  }
+const handleClickConfirm = (formData:CustomerInfo) => {  
+    console.log('Form submitted:', formData);
+    setIsModalOpen(false);
+  }
 
-  
-  
   // Check if window width is mobile on mount and window resize
   useEffect(() => {
     const checkIsMobile = () => {
@@ -31,7 +44,8 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="bg-[#F1F1F1] relative z-50">
+<>
+<header className="bg-[#F1F1F1] relative z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -74,7 +88,15 @@ export default function Header() {
                 </span>
               )}
             </div>
+           
           </Link>
+          <button
+  onClick={()=> setIsModalOpen(true)}
+  className="px-6 py-2 bg-[#027BFB] hover:bg-[#0066d6] text-white font-semibold rounded-[15px] shadow hover:from-indigo-500 hover:to-blue-500 transition"
+>
+  Contact Us
+</button>
+
         </nav>
 
         {/* Hamburger Menu Button */}
@@ -133,8 +155,27 @@ export default function Header() {
               )}
             </Link>
           </div>
+          <button
+  onClick={()=> setIsModalOpen(true)}
+  className="px-6 py-2 bg-[#027BFB] hover:bg-[#0066d6] text-white font-semibold rounded-[15px] shadow hover:from-indigo-500 hover:to-blue-500 transition"
+>
+  Contact Us
+</button>
         </div>
       </nav>
+     
+ 
+
     </header>
+    {isModalOpen && (
+  <ContactUsFormModal
+    isOpen={isModalOpen}
+    onClose={() => setIsModalOpen(false)}
+    onConfirm={handleClickConfirm}
+    isProcessing={false}
+    total={0}
+  />
+)}
+</>
   );
 }

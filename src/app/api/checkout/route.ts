@@ -1,22 +1,22 @@
-// src/app/api/checkout/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiError, Client, Environment } from 'square/legacy';
 import axios from 'axios';
 import FormData from 'form-data';
-import { generateOrderEmailHTML } from '@/emails/orderConfirmationTemplate'; // 👈 Adjust the path as needed
+import { generateOrderEmailHTML } from '@/emails/orderConfirmationTemplate';
 import { CartItem } from '@/types/cart';
+import { CustomerInfo } from '@/types/customer'; // Adjust path as needed
 
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN!,
-  environment: Environment.Production
+  environment: Environment.Sandbox
 });
 
 const checkoutApi = client.checkoutApi;
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { items } = body;
+ const { items, customer } = body;
+
 
   if (!items || !Array.isArray(items)) {
     return NextResponse.json({ error: 'Invalid cart data' }, { status: 400 });
@@ -30,14 +30,16 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const lineItems = items.map((item) => ({
+    const lineItems = items.map((item) => {
+      return {
       name: item.name,
       quantity: item.quantity.toString(),
       basePriceMoney: {
         amount: BigInt(Math.round(item.price * 100)),
         currency: 'USD',
       },
-    }));
+    };
+    });
 
     const response = await checkoutApi.createCheckout(process.env.SQUARE_LOCATION_ID!, {
       idempotencyKey: new Date().toISOString(),
@@ -53,16 +55,16 @@ export async function POST(req: NextRequest) {
     const checkoutUrl = response.result.checkout?.checkoutPageUrl;
 
     // 💌 Send email to business owner
-    await sendOrderEmailToOwner(items, checkoutUrl??'');
+    await sendOrderEmailToOwner(items, checkoutUrl ?? '', customer);
 
     return NextResponse.json({ checkoutUrl });
   } catch (error) {
     console.error('Square checkout error:', error);
-    
+
     if (error instanceof ApiError) {
       const errorMessage = error.message;
       const errorDetails = error.result?.errors ?? null;
-  
+
       console.error('Square API message:', errorMessage);
       console.error('Square API errors:', JSON.stringify(errorDetails, null, 2));
     } else if (error instanceof Error) {
@@ -74,14 +76,13 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// 👇 Utility function to send email via Mailgun
-async function sendOrderEmailToOwner(items: CartItem[] , checkoutUrl: string) {
+async function sendOrderEmailToOwner(items:CartItem[],checkoutUrl: string, customer: CustomerInfo) {
   const form = new FormData();
 
-  const emailHTML = generateOrderEmailHTML(items, checkoutUrl);
+  const emailHTML = generateOrderEmailHTML(items, checkoutUrl, customer);
 
   form.append('from', 'Order Bot <postmaster@sandbox84199c1eb7504f34b8891918eba801e7.mailgun.org>');
-  form.append('to', 'marmikmodi209@gmail.com'); // must be verified in sandbox
+  form.append('to', 'marmikmodi209@gmail.com');
   form.append('subject', '🛒 New Checkout Initiated');
   form.append('html', emailHTML);
 

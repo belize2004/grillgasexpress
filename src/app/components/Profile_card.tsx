@@ -8,7 +8,7 @@ import { Profile } from "@/types/profile";
 
 export default async function ProfileCard() {
   const profiles = await client.fetch(groq`*[_type=="profileCard"]`);
-
+  if (!profiles || profiles.length === 0) return null; // 👈 Return nothing if no profiles
   return (
     <div className="px-4 pb-6">
       <div

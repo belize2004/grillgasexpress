@@ -10,8 +10,12 @@ import TeamSection from "./components/team_header";
 import ProfileCard from "./components/Profile_card";
 import Footer from "./components/footer";
 import ProductList from "./components/ProductList";
+import { getProducts, getProfiles, getTestimonials } from "@/lib/sanity-utils";
 
 export default async function Home() {
+  const products = await getProducts();
+  const profiles = await getProfiles();
+  const testimonials = await getTestimonials();
   return (
     <main className="min-h-screen bg-white text-gray-900">
       {/* Navbar */}
@@ -19,16 +23,30 @@ export default async function Home() {
       <Header />
       <Hero />
       <Banner/>
-      <ProductSection/>
-      <ProductList/>
+      {/* Conditional Rendering */}
+      {products.length > 0 && (
+        <>
+          <ProductSection />
+          <ProductList />
+        </>
+      )}
+      
       <FoodTruck/>
-      <TestimonialSection/>
-      <TestimonialCard/>
+      {testimonials.length > 0 && (
+        <>
+          <TestimonialSection />
+          <TestimonialCard />
+        </>
+      )}
       <AboutUs/>
-      <div className="p-2"></div>
-      <TeamSection/>
-      <div className="p-2"></div>
-      <ProfileCard/>
+      {profiles.length > 0 && (
+        <>
+           <div className="p-2"></div>
+           <TeamSection/>
+           <div className="p-2"></div>
+           <ProfileCard />
+        </>
+      )}
       <Footer/>
       </div>
     </main>

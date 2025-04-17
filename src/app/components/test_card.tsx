@@ -43,7 +43,7 @@ export default function TestCard({ products }: Props) {
                   onClick={() => {
                     addToCart({
                       _id: product._id,
-                      title: product.name,
+                      name: product.name,
                       image: product.image,
                       price: product.price,
                       quantity: 1,
