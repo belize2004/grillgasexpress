@@ -49,6 +49,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       return false;
     } else {
       // Add new item to cart
+       toast.success(`${newItem.name} added to cart!`);
       setCartItems(prev => [...prev, newItem]);
       return true;
     }

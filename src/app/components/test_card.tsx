@@ -48,7 +48,7 @@ export default function TestCard({ products }: Props) {
                       price: product.price,
                       quantity: 1,
                     });
-                    toast.success(`${product.name} added to cart!`);
+                    // toast.success(`${product.name} added to cart!`);
                   }}
                 >
                   Order Now
