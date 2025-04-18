@@ -8,7 +8,7 @@ import { CustomerInfo } from '@/types/customer'; // Adjust path as needed
 
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN!,
-  environment: Environment.Sandbox
+  environment: Environment.Production
 });
 
 const checkoutApi = client.checkoutApi;
