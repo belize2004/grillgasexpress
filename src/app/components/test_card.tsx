@@ -5,7 +5,7 @@ import { Product } from "@/types/product";
 import { urlFor } from "@/sanity/lib/image";
 import { GoArrowUpRight } from "react-icons/go";
 import { useCart } from "../context/CartContext";
-import { toast } from "react-hot-toast";
+
 
 type Props = {
   products: Product[];
