@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
  const { items, customer } = body;
 
+ console.log("Order Payload", JSON.stringify(body, null, 2));
 
   if (!items || !Array.isArray(items)) {
     return NextResponse.json({ error: 'Invalid cart data' }, { status: 400 });
