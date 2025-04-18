@@ -23,7 +23,7 @@ const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
   onClose,
   onConfirm,
   isProcessing,
-  total
+//   total
 }) => {
   const [formData, setFormData] = useState<DeliveryFormData>({
     firstName: '',
@@ -170,6 +170,7 @@ const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
               </button>
               <button
                 type="submit"
+                onClick={handleSubmit}
                 className="flex-1 px-4 py-2 bg-black text-white rounded-md  py-2 bg-[#0066d6]"
                 disabled={isProcessing}
               >

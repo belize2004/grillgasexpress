@@ -16,12 +16,12 @@ export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   
-const handelClickOpenContactFormModal = () => { 
-    setIsModalOpen(!true);
-  }
-const handelClickCloseContactFormModal = () => {    
-    setIsModalOpen(false);
-  }
+// const handelClickOpenContactFormModal = () => { 
+//     setIsModalOpen(!true);
+//   }
+// const handelClickCloseContactFormModal = () => {    
+//     setIsModalOpen(false);
+//   }
 const handleClickConfirm = (formData:CustomerInfo) => {  
     console.log('Form submitted:', formData);
     setIsModalOpen(false);

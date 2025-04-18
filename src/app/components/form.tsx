@@ -1,4 +1,3 @@
-import { CustomerInfo } from '@/types/customer';
 import React, { useState } from 'react';
 
 interface DeliveryFormModalProps {
@@ -74,7 +73,7 @@ const DeliveryFormModal: React.FC<DeliveryFormModalProps> = ({
       <div className="bg-white p-8 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-semibold mb-4">Complete Your Delivery</h2>
         <p className="text-gray-600 mb-6">
-          Enter your details to get your order delivered fast and hassle-free. We'll confirm your order right away!
+          Enter your details to get your order delivered fast and hassle-free. We&apos;ll confirm your order right away!
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">

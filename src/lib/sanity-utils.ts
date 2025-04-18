@@ -1,5 +1,4 @@
 // sanity-utils.ts
-import { createClient } from 'next-sanity';
 import { groq } from 'next-sanity';
 import { Product} from '@/types/product'; // adjust path if needed
 import { Profile } from '@/types/profile';
