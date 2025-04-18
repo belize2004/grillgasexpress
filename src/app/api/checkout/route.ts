@@ -83,7 +83,7 @@ async function sendOrderEmailToOwner(items:CartItem[],checkoutUrl: string, custo
   const emailHTML = generateOrderEmailHTML(items, checkoutUrl, customer);
 
   form.append('from', 'Order Bot <postmaster@sandbox84199c1eb7504f34b8891918eba801e7.mailgun.org>');
-  form.append('to', 'marmikmodi209@gmail.com');
+  form.append('to', 'marmikmodi209@gmail.com, blaine@flowwebdesigner.com');
   form.append('subject', '🛒 New Checkout Initiated');
   form.append('html', emailHTML);
 
