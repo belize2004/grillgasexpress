@@ -2,7 +2,9 @@ export interface CustomerInfo {
     firstName: string;
     lastName: string;
     email: string;
+    phone: string;
     address: string;
-    phone:string;
+    deliveryOption?: string;
+    message?: string;
   }
   

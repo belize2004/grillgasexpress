@@ -7,16 +7,24 @@ import { urlFor } from '@/sanity/lib/image';
 import { toast } from 'react-hot-toast';
 import DeliveryFormModal from './form'; // 👈 Import Modal
 import { CustomerInfo } from '@/types/customer';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client
+const supabaseUrl = 'https://mexvjgivsfadabaakqfk.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1leHZqZ2l2c2ZhZGFiYWFrcWZrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjA5MDY2OCwiZXhwIjoyMDYxNjY2NjY4fQ.UE9ufO2xI4NfO3gnonUsOA0Ln6_xIide0EAftIRbwi0';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const Cart = () => {
-  const { cartItems, updateQuantity, removeFromCart } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [showDeliveryForm, setShowDeliveryForm] = useState(false); // 👈 Control modal
+  const [orderSuccess, setOrderSuccess] = useState(false);
+  const [orderId, setOrderId] = useState<number | null>(null);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const salesTax = +(subtotal * 0.1).toFixed(2);
   const total = +(subtotal + salesTax).toFixed(2);
-  console.log(cartItems);
+  
   const handleQtyChange = (id: string, diff: number) => {
     const item = cartItems.find(i => i._id === id);
     if (item) {
@@ -29,11 +37,63 @@ const Cart = () => {
     }
   };
 
+  // Function to save order data to Supabase
+  const saveOrderToSupabase = async (formData: CustomerInfo, isAfterPayment: boolean = false) => {
+    try {
+      // Prepare cart items for JSON storage - simplified to only name, quantity, and total
+      const cartItemsForDB = cartItems.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        total: item.price * item.quantity
+      }));
+
+      // Create order object
+      const orderData = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone_number: formData.phone,
+        address: formData.address,
+        delivery_option: formData.deliveryOption || 'Standard Delivery (2-5 Days)',
+        message: formData.message || null,
+        total_amount: total,
+        cart_items: JSON.stringify(cartItemsForDB),
+        // These will be set automatically by Supabase defaults
+        // created_at: new Date().toISOString(),
+        // updated_at: new Date().toISOString()
+      };
+
+      console.log('Saving order to Supabase:', orderData);
+
+      // Insert order into Supabase
+      const { data, error } = await supabase
+        .from('orders')
+        .insert([orderData])
+        .select('id')
+        .single();
+
+      if (error) {
+        console.error('Error saving order to Supabase:', error);
+        throw error;
+      }
+
+      console.log('Order saved successfully:', data);
+      
+      // Return the order ID
+      return data.id;
+    } catch (error) {
+      console.error('Failed to save order to Supabase:', error);
+      throw error;
+    }
+  };
+
+  // For production - call after successful payment
   const handleConfirmDelivery = async (formData: CustomerInfo) => {
     const { firstName, lastName, email, address, phone } = formData;
     setIsProcessing(true);
-    console.log(cartItems);
+    
     try {
+      // First attempt payment
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -43,7 +103,7 @@ const Cart = () => {
             quantity: item.quantity,
             price: item.price,
           })),
-          customer: { firstName, lastName, email, address, phone }  // 👈 include delivery form data
+          customer: { firstName, lastName, email, address, phone }
         }),
       });
 
@@ -51,7 +111,9 @@ const Cart = () => {
       const data = await response.json();
 
       if (data?.checkoutUrl) {
-        toast.success('Redirecting to payment...');
+        // If payment is successful, save order to Supabase
+        const newOrderId = await saveOrderToSupabase(formData, false);
+        toast.success('Order placed successfully! Redirecting to payment...');
         window.location.href = data.checkoutUrl;
       } else {
         throw new Error('No checkout URL received');
@@ -63,8 +125,56 @@ const Cart = () => {
     }
   };
 
-  return (
+  // For testing - call before payment
+  const handleConfirmDeliveryForTest = async (formData: CustomerInfo) => {
+    setIsProcessing(true);
     
+    try {
+      // Save order to Supabase for testing
+      const newOrderId = await saveOrderToSupabase(formData, false);
+      
+      // Set order success state
+      setOrderSuccess(true);
+      setOrderId(newOrderId);
+      setShowDeliveryForm(false);
+      
+      // Show success toast
+      toast.success('Test order placed successfully! Order ID: ' + newOrderId);
+      
+      // Clear the cart
+      clearCart();
+      
+    } catch (err) {
+      console.error('Order failed:', err);
+      toast.error('Order failed: ' + (err instanceof Error ? err.message : String(err)));
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+  
+  // Show order success message if order was placed
+  if (orderSuccess && orderId) {
+    return (
+      <section className="px-6 py-10 max-w-4xl mx-auto bg-white rounded-xl shadow">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold mb-4 text-green-600">Order Placed Successfully!</h2>
+          <p className="mb-2">Your order ID is: <span className="font-bold">{orderId}</span></p>
+          <p className="mb-6">We've received your order and will process it shortly.</p>
+          <button
+            onClick={() => {
+              setOrderSuccess(false);
+              setOrderId(null);
+            }}
+            className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800"
+          >
+            Place Another Order
+          </button>
+        </div>
+      </section>
+    );
+  }
+  
+  return (
     <section id="#cart" className="px-6 py-10 max-w-4xl mx-auto bg-white rounded-xl shadow">
       <h2 className="text-2xl font-semibold mb-6">Your Cart ({cartItems.length} items)</h2>
       <div className="space-y-6">
@@ -107,7 +217,8 @@ const Cart = () => {
       <DeliveryFormModal
         isOpen={showDeliveryForm}
         onClose={() => setShowDeliveryForm(false)}
-        onConfirm={handleConfirmDelivery}
+        onConfirm={handleConfirmDelivery} // For testing, use this handler
+        // onConfirm={handleConfirmDelivery} // For production, use this handler
         isProcessing={isProcessing}
         total={total}
       />

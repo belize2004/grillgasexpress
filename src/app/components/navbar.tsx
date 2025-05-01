@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { FaShoppingCart } from 'react-icons/fa';
-import ContactUsFormModal from './contact_form';
+import ContactUsFormModal from './contact_form_new';
 import { CustomerInfo } from '@/types/customer';
 
 export default function Header() {
