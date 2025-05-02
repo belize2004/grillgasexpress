@@ -1,4 +1,4 @@
-import { FaFacebookF, FaTwitter, FaInstagram, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaInstagram, FaPhone } from "react-icons/fa";
 
 export default function Footer() {
   return (
