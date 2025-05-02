@@ -192,8 +192,7 @@ const Cart = () => {
       <DeliveryFormModal
         isOpen={showDeliveryForm}
         onClose={() => setShowDeliveryForm(false)}
-        onConfirm={handleConfirmDelivery} // This handler creates the order and redirects to payment
-        // onConfirm={handleConfirmDeliveryForTest} // Use this handler for testing without payment
+        onConfirm={handleConfirmDelivery} // This handler gets checkout URL then saves order
         isProcessing={isProcessing}
         total={total}
       />
