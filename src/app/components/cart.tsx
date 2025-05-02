@@ -111,9 +111,7 @@ const Cart = () => {
       const data = await response.json();
 
       if (data?.checkoutUrl) {
-        // Redirect to checkout - payment status will be updated by webhook
         window.location.href = data.checkoutUrl;
-         // First save order to Supabase to get order ID
       const newOrderId = await saveOrderToSupabase(formData);
       console.log('Created order with ID:', newOrderId);
       
@@ -127,32 +125,7 @@ const Cart = () => {
     }
   };
 
-  // For testing - call before payment
-  const handleConfirmDeliveryForTest = async (formData: CustomerInfo) => {
-    setIsProcessing(true);
-    
-    try {
-      // Save order to Supabase for testing
-      const newOrderId = await saveOrderToSupabase(formData);
-      
-      // Set order success state
-      setOrderSuccess(true);
-      setOrderId(newOrderId);
-      setShowDeliveryForm(false);
-      
-      // Show success toast
-      toast.success('Test order placed successfully! Order ID: ' + newOrderId);
-      
-      // Clear the cart
-      clearCart();
-      
-    } catch (err) {
-      console.error('Order failed:', err);
-      toast.error('Order failed: ' + (err instanceof Error ? err.message : String(err)));
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  
   
   // Show order success message if order was placed
   if (orderSuccess && orderId) {
