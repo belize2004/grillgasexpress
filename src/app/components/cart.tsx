@@ -92,7 +92,6 @@ const Cart = () => {
     
     try {
      
-      // Then attempt payment with order ID included
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
