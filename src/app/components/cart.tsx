@@ -38,7 +38,7 @@ const Cart = () => {
   };
 
   // Function to save order data to Supabase
-  const saveOrderToSupabase = async (formData: CustomerInfo, isAfterPayment: boolean = false) => {
+  const saveOrderToSupabase = async (formData: CustomerInfo) => {
     try {
       // Prepare cart items for JSON storage - simplified to only name, quantity, and total
       const cartItemsForDB = cartItems.map(item => ({
@@ -58,9 +58,7 @@ const Cart = () => {
         message: formData.message || null,
         total_amount: total,
         cart_items: JSON.stringify(cartItemsForDB),
-        // These will be set automatically by Supabase defaults
-        // created_at: new Date().toISOString(),
-        // updated_at: new Date().toISOString()
+        status: 'pending' // Add payment status field
       };
 
       console.log('Saving order to Supabase:', orderData);
@@ -93,7 +91,8 @@ const Cart = () => {
     setIsProcessing(true);
     
     try {
-      // First attempt payment
+     
+      // Then attempt payment with order ID included
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -103,18 +102,21 @@ const Cart = () => {
             quantity: item.quantity,
             price: item.price,
           })),
-          customer: { firstName, lastName, email, address, phone }
+          customer: { firstName, lastName, email, address, phone },
+       
         }),
       });
-
+    
       if (!response.ok) throw new Error(await response.text());
       const data = await response.json();
 
       if (data?.checkoutUrl) {
-        // If payment is successful, save order to Supabase
-        const newOrderId = await saveOrderToSupabase(formData, false);
-        toast.success('Order placed successfully! Redirecting to payment...');
+        // Redirect to checkout - payment status will be updated by webhook
         window.location.href = data.checkoutUrl;
+         // First save order to Supabase to get order ID
+      const newOrderId = await saveOrderToSupabase(formData);
+      console.log('Created order with ID:', newOrderId);
+      
       } else {
         throw new Error('No checkout URL received');
       }
@@ -131,7 +133,7 @@ const Cart = () => {
     
     try {
       // Save order to Supabase for testing
-      const newOrderId = await saveOrderToSupabase(formData, false);
+      const newOrderId = await saveOrderToSupabase(formData);
       
       // Set order success state
       setOrderSuccess(true);
@@ -217,8 +219,8 @@ const Cart = () => {
       <DeliveryFormModal
         isOpen={showDeliveryForm}
         onClose={() => setShowDeliveryForm(false)}
-        onConfirm={handleConfirmDelivery} // For testing, use this handler
-        // onConfirm={handleConfirmDelivery} // For production, use this handler
+        onConfirm={handleConfirmDelivery} // This handler creates the order and redirects to payment
+        // onConfirm={handleConfirmDeliveryForTest} // Use this handler for testing without payment
         isProcessing={isProcessing}
         total={total}
       />
