@@ -46,7 +46,7 @@ export default function Banner() {
                 </li>
                 <li className="flex items-start">
                   <span className="inline-block w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  <span>Navarre, Sand Destin</span>
+                  <span>Navarre, Sand Destin ,Pensacola, Destin, ft Walton</span>
                 </li>
               </ul>
          

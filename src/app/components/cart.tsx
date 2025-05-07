@@ -87,7 +87,7 @@ const Cart = () => {
 
   // For production - call after successful payment
   const handleConfirmDelivery = async (formData: CustomerInfo) => {
-    const { firstName, lastName, email, address, phone } = formData;
+    const { firstName, lastName, email, address, phone,deliveryOption,message } = formData;
     setIsProcessing(true);
     
     try {
@@ -101,7 +101,7 @@ const Cart = () => {
             quantity: item.quantity,
             price: item.price,
           })),
-          customer: { firstName, lastName, email, address, phone },
+          customer: { firstName, lastName, email, address, phone,deliveryOption ,message},
        
         }),
       });

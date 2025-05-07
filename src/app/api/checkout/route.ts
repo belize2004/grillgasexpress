@@ -16,6 +16,7 @@ const checkoutApi = client.checkoutApi;
 export async function POST(req: NextRequest) {
   const body = await req.json();
  const { items, customer } = body;
+ console.log("Customer ===========", customer);
 
  console.log("Order Payload", JSON.stringify(body, null, 2));
 
@@ -83,7 +84,7 @@ async function sendOrderEmailToOwner(items:CartItem[],checkoutUrl: string, custo
   const emailHTML = generateOrderEmailHTML(items, checkoutUrl, customer);
 
   form.append('from', 'Order Bot <postmaster@sandbox84199c1eb7504f34b8891918eba801e7.mailgun.org>');
-  form.append('to', 'blaine@flowwebdesigner.com');
+  form.append('to', 'hardik@a618labs.com');
   form.append('subject', '🛒 New Checkout Initiated');
   form.append('html', emailHTML);
 

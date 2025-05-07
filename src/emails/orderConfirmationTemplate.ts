@@ -3,6 +3,7 @@ import { CustomerInfo } from "@/types/customer";
 
 export function generateOrderEmailHTML(items: CartItem[], checkoutUrl: string, customer: CustomerInfo) {
   console.log("🧾 Cart items received in email generator:", items);
+  console.log("🧾 Customer received in email generator:", customer);
 
   const itemList = items
     .map(
@@ -18,6 +19,10 @@ export function generateOrderEmailHTML(items: CartItem[], checkoutUrl: string, c
       <p><strong>Email:</strong> ${customer.email}</p>
       <p><strong>Phone:</strong> ${customer.phone}</p>
       <p><strong>Address:</strong> ${customer.address}</p>
+      <p><strong>Delivery Option:</strong> ${customer.deliveryOption}</p>
+      <p><strong>Message:</strong> ${customer.message}</p>
+
+
     `
     : '';
 
