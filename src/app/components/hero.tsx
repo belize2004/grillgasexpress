@@ -9,8 +9,7 @@ export default function Hero() {
               {/* Text Content - Takes 60% width on desktop */}
               <div className="w-full md:w-[60%]">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="bg-amber-100 p-2 rounded-md">
-                  </div>
+                  
                   <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Why Choose Us?</h2>
                 </div>
                 
