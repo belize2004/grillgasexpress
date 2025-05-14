@@ -13,7 +13,24 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = 'https://mexvjgivsfadabaakqfk.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1leHZqZ2l2c2ZhZGFiYWFrcWZrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NjA5MDY2OCwiZXhwIjoyMDYxNjY2NjY4fQ.UE9ufO2xI4NfO3gnonUsOA0Ln6_xIide0EAftIRbwi0';
 const supabase = createClient(supabaseUrl, supabaseKey);
+interface Address {
+  addressLine1: string;
+  addressLine2: string;
+  locality: string;                     // City
+  administrativeDistrictLevel1: string; // State
+  postalCode: string;
+  county:string;                   // ZIP code
+}
 
+interface DeliveryFormData {
+  firstName: string;
+  lastName: string;
+  address: Address;
+  phone: string;
+  email: string;
+  deliveryOption: string;
+  message: string;
+}
 const Cart = () => {
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -22,8 +39,8 @@ const Cart = () => {
   const [orderId, setOrderId] = useState<number | null>(null);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const salesTax = +(subtotal * 0.1).toFixed(2);
-  const total = +(subtotal + salesTax).toFixed(2);
+  // const salesTax = +(subtotal * 0.1).toFixed(2);
+  // const total = +(subtotal + salesTax).toFixed(2);
   
   const handleQtyChange = (id: string, diff: number) => {
     const item = cartItems.find(i => i._id === id);
@@ -56,7 +73,7 @@ const Cart = () => {
         address: formData.address,
         delivery_option: formData.deliveryOption || 'Standard Delivery (2-5 Days)',
         message: formData.message || null,
-        total_amount: total,
+        total_amount: subtotal,
         cart_items: JSON.stringify(cartItemsForDB),
         status: 'pending' // Add payment status field
       };
@@ -176,8 +193,8 @@ const Cart = () => {
 
       <div className="mt-8 border-t pt-4 space-y-2 text-right">
         <p>Subtotal: <span className="font-medium">${subtotal.toFixed(2)}</span></p>
-        <p>Sales Tax: <span className="font-medium">${salesTax}</span></p>
-        <p className="text-lg font-bold">Total: ${total}</p>
+        {/* <p>Sales Tax: <span className="font-medium">${salesTax}</span></p> */}
+        {/* <p className="text-lg font-bold">Total: ${total}</p> */}
         <button
           className="mt-4 px-6 py-2 bg-black text-white rounded hover:bg-gray-800 disabled:opacity-50"
           onClick={() => setShowDeliveryForm(true)}
@@ -193,7 +210,7 @@ const Cart = () => {
         onClose={() => setShowDeliveryForm(false)}
         onConfirm={handleConfirmDelivery} // This handler gets checkout URL then saves order
         isProcessing={isProcessing}
-        total={total}
+        total={subtotal}
       />
     </section>
   );

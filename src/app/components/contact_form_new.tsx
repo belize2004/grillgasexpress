@@ -11,6 +11,14 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Define the database table name as a constant
 const CONTACT_MESSAGES_TABLE = 'contact_messages';
 
+interface Address {
+  addressLine1: string;
+  addressLine2: string;
+  locality: string;           // City
+  administrativeDistrictLevel1: string;  // State
+  postalCode: string;         // ZIP code
+}
+
 interface ContactFormModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -22,11 +30,26 @@ interface ContactFormModalProps {
 interface DeliveryFormData {
   firstName: string;
   lastName: string;
-  address: string;
+  address: Address;
   phone: string;
   email: string;
   deliveryOption: string;
   message: string;
+}
+
+interface FormErrors {
+  firstName?: string;
+  lastName?: string;
+  address?: {
+    addressLine1?: string;
+    addressLine2?: string;
+    locality?: string;
+    administrativeDistrictLevel1?: string;
+    postalCode?: string;
+  };
+  phone?: string;
+  email?: string;
+  message?: string;
 }
 
 const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
@@ -39,18 +62,24 @@ const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
   const [formData, setFormData] = useState<DeliveryFormData>({
     firstName: '',
     lastName: '',
-    address: '',
+    address: {
+      addressLine1: '',
+      addressLine2: '',
+      locality: '',
+      administrativeDistrictLevel1: '',
+      postalCode: ''
+    },
     phone: '',
     email: '',
     deliveryOption: 'Standard Delivery (2-5 Days)',
     message: ''
   });
 
-  const [errors, setErrors] = useState<Partial<DeliveryFormData>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [submitStatus, setSubmitStatus] = useState<{ success?: boolean; message?: string } | null>(null);
 
   const validateForm = () => {
-    const newErrors: Partial<DeliveryFormData> = {};
+    const newErrors: FormErrors = {};
     
     // Validate first name
     if (!formData.firstName.trim()) {
@@ -62,9 +91,29 @@ const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
       newErrors.lastName = 'Last name is required';
     }
     
-    // Validate address
-    if (!formData.address.trim()) {
-      newErrors.address = 'Address is required';
+    // Validate address fields
+    const addressErrors: FormErrors['address'] = {};
+    
+    if (!formData.address.addressLine1.trim()) {
+      addressErrors.addressLine1 = 'Address line 1 is required';
+    }
+    
+    if (!formData.address.locality.trim()) {
+      addressErrors.locality = 'City is required';
+    }
+    
+    if (!formData.address.administrativeDistrictLevel1.trim()) {
+      addressErrors.administrativeDistrictLevel1 = 'State is required';
+    }
+    
+    if (!formData.address.postalCode.trim()) {
+      addressErrors.postalCode = 'ZIP code is required';
+    } else if (!/^\d{5}(-\d{4})?$/.test(formData.address.postalCode.trim())) {
+      addressErrors.postalCode = 'Please enter a valid ZIP code';
+    }
+    
+    if (Object.keys(addressErrors).length > 0) {
+      newErrors.address = addressErrors;
     }
     
     // Validate phone
@@ -95,6 +144,11 @@ const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
         const contactData = {
           first_name: formData.firstName.trim(),
           last_name: formData.lastName.trim(),
+          address_line1: formData.address.addressLine1.trim(),
+          address_line2: formData.address.addressLine2.trim() || null,
+          city: formData.address.locality.trim(),
+          state: formData.address.administrativeDistrictLevel1.trim(),
+          postal_code: formData.address.postalCode.trim(),
           phone_number: formData.phone.trim(),
           email: formData.email.trim(),
           message: formData.message.trim() || null,
@@ -121,7 +175,13 @@ const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
         setFormData({
           firstName: '',
           lastName: '',
-          address: '',
+          address: {
+            addressLine1: '',
+            addressLine2: '',
+            locality: '',
+            administrativeDistrictLevel1: '',
+            postalCode: ''
+          },
           phone: '',
           email: '',
           deliveryOption: 'Standard Delivery (2-5 Days)',
@@ -151,9 +211,34 @@ const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name as keyof DeliveryFormData]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+    
+    // Handle address fields separately
+    if (name.startsWith('address.')) {
+      const addressField = name.split('.')[1];
+      setFormData(prev => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [addressField]: value
+        }
+      }));
+      
+      // Clear error for this address field if it exists
+      if (errors.address && errors.address[addressField as keyof Address]) {
+        setErrors(prev => ({
+          ...prev,
+          address: {
+            ...prev.address,
+            [addressField]: undefined
+          }
+        }));
+      }
+    } else {
+      // Handle other fields
+      setFormData(prev => ({ ...prev, [name]: value }));
+      // if (errors[name as keyof DeliveryFormData]) {
+      //   setErrors(prev => ({ ...prev, [name]: undefined }));
+      // }
     }
     
     // Clear status message when user starts typing again
@@ -179,8 +264,6 @@ const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
         </div>
         <p className="text-gray-600 mb-6">Our friendly team would love to hear from you.</p>
         
-    
-
         {submitStatus && (
           <div className={`p-4 mb-6 rounded-md flex items-start ${
             submitStatus.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
@@ -228,20 +311,91 @@ const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Address<span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              className={`w-full p-2 border rounded-md ${errors.address ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
-              placeholder="Your address"
-              required
-            />
-            {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+          {/* Address Section */}
+          <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
+            <h3 className="text-md font-medium text-gray-700 mb-3">Address Information</h3>
+            
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Address Line 1<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="address.addressLine1"
+                  value={formData.address.addressLine1}
+                  onChange={handleChange}
+                  className={`w-full p-2 border rounded-md ${errors.address?.addressLine1 ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                  placeholder="Street address"
+                  required
+                />
+                {errors.address?.addressLine1 && <p className="text-red-500 text-sm mt-1">{errors.address.addressLine1}</p>}
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Address Line 2
+                </label>
+                <input
+                  type="text"
+                  name="address.addressLine2"
+                  value={formData.address.addressLine2}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="Apartment, suite, unit, etc. (optional)"
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="md:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    City<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="address.locality"
+                    value={formData.address.locality}
+                    onChange={handleChange}
+                    className={`w-full p-2 border rounded-md ${errors.address?.locality ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                    placeholder="City"
+                    required
+                  />
+                  {errors.address?.locality && <p className="text-red-500 text-sm mt-1">{errors.address.locality}</p>}
+                </div>
+                
+                <div className="md:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    State<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="address.administrativeDistrictLevel1"
+                    value={formData.address.administrativeDistrictLevel1}
+                    onChange={handleChange}
+                    className={`w-full p-2 border rounded-md ${errors.address?.administrativeDistrictLevel1 ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                    placeholder="State"
+                    required
+                  />
+                  {errors.address?.administrativeDistrictLevel1 && <p className="text-red-500 text-sm mt-1">{errors.address.administrativeDistrictLevel1}</p>}
+                </div>
+                
+                <div className="md:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    ZIP Code<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="address.postalCode"
+                    value={formData.address.postalCode}
+                    onChange={handleChange}
+                    className={`w-full p-2 border rounded-md ${errors.address?.postalCode ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                    placeholder="ZIP Code"
+                    required
+                  />
+                  {errors.address?.postalCode && <p className="text-red-500 text-sm mt-1">{errors.address.postalCode}</p>}
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -317,4 +471,4 @@ const ContactUsFormModal: React.FC<ContactFormModalProps> = ({
   );
 };
 
-export default ContactUsFormModal; 
+export default ContactUsFormModal;
