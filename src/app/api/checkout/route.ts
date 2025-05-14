@@ -203,7 +203,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 💌 Send email to business owner
-    await sendOrderEmailToOwner(items, checkoutUrl, customer,Number(orderResponse.result.order?.totalTaxMoney)/100||taxRate);
+    await sendOrderEmailToOwner(items, checkoutUrl, customer,Number(orderResponse.result.order?.totalTaxMoney?.amount)/100||taxRate);
 
     return NextResponse.json({ checkoutUrl });
 
