@@ -265,7 +265,7 @@ const DeliveryFormModal: React.FC<DeliveryFormModalProps> = ({
                   value={formData.address.county}
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-md ${errors.address?.county ? 'border-red-500' : 'border-gray-300'}`}
-                  placeholder="33012"
+                  placeholder="Escambia"
                 />
                 {errors.address?.county && <p className="text-red-500 text-sm mt-1">{errors.address.county}</p>}
             </div>
