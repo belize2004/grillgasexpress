@@ -266,9 +266,9 @@ const DeliveryFormModal: React.FC<DeliveryFormModalProps> = ({
 			  className={`w-full p-2 border rounded-md ${errors.address?.county ? 'border-red-500' : 'border-gray-300'}`}
 			>
 			  <option value="" disabled>Select County</option>
-			  <option value="Escambia County Sales Tax">Escambia County Sales Tax</option>
-			  <option value="Okaloosa County Sales Tax">Okaloosa County Sales Tax</option>
-			  <option value="Santa Rosa County Sales Tax">Santa Rosa County Sales Tax</option>
+			  <option value="Escambia County Sales Tax">Escambia</option>
+			  <option value="Okaloosa County Sales Tax">Okaloosa</option>
+			  <option value="Santa Rosa County Sales Tax">Santa Rosa</option>
 			</select>
                 {errors.address?.county && <p className="text-red-500 text-sm mt-1">{errors.address.county}</p>}
             </div>
