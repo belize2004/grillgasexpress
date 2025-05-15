@@ -259,14 +259,17 @@ const DeliveryFormModal: React.FC<DeliveryFormModalProps> = ({
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   County<span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  name="address.county"
-                  value={formData.address.county}
-                  onChange={handleChange}
-                  className={`w-full p-2 border rounded-md ${errors.address?.county ? 'border-red-500' : 'border-gray-300'}`}
-                  placeholder="Escambia"
-                />
+                <select
+			  name="address.county"
+			  value={formData.address.county}
+			  onChange={handleChange}
+			  className={`w-full p-2 border rounded-md ${errors.address?.county ? 'border-red-500' : 'border-gray-300'}`}
+			>
+			  <option value="" disabled>Select County</option>
+			  <option value="Escambia County Sales Tax">Escambia County Sales Tax</option>
+			  <option value="Okaloosa County Sales Tax">Okaloosa County Sales Tax</option>
+			  <option value="Santa Rosa County Sales Tax">Santa Rosa County Sales Tax</option>
+			</select>
                 {errors.address?.county && <p className="text-red-500 text-sm mt-1">{errors.address.county}</p>}
             </div>
           </div>
